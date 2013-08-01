@@ -5,5 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Damkar</string>
+    <string name="btnIntendS">Take (small) Picture</string>
+    <string name="cannot">Cannot</string>
+    <string name="album_name">DamkarCamera</string>
 
 </resources>

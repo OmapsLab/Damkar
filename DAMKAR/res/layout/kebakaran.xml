@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alwaysDrawnWithCache="false"
+    android:fitsSystemWindows="true" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="17dp" >
+
+            <LinearLayout
+                android:id="@+id/area_location"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="15dp" >
+
+                    <TextView
+                        android:id="@+id/label_location_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Lokasi Kejadian"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <TextView
+                        android:id="@+id/label_location_latitude"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/label_location_header"
+                        android:layout_below="@+id/label_location_header"
+                        android:layout_marginTop="18dp"
+                        android:text="Latitude  "
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <TextView
+                        android:id="@+id/label_location_longitude"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/label_location_latitude"
+                        android:layout_below="@+id/label_location_latitude"
+                        android:layout_marginTop="6dp"
+                        android:text="Longitude "
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <Button
+                        android:id="@+id/btn_get_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/label_location_longitude"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="24dp"
+                        android:text="Dapatkan Lokasi" />
+
+                    <TextView
+                        android:id="@+id/label_location_latitude_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/label_location_latitude"
+                        android:layout_alignBottom="@+id/label_location_latitude"
+                        android:layout_marginLeft="30dp"
+                        android:layout_toRightOf="@+id/label_location_latitude"
+                        android:singleLine="true"
+                        android:text=": -1.-23902302"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:id="@+id/label_location_longitude_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/label_location_longitude"
+                        android:layout_alignBottom="@+id/label_location_longitude"
+                        android:layout_marginLeft="22dp"
+                        android:layout_toRightOf="@+id/label_location_longitude"
+                        android:text=": 107.-23902302"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textStyle="italic" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/area_photo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/area_location"
+                android:layout_marginTop="15dp"
+                android:background="#fff" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="15dp" >
+
+                    <ImageView
+                        android:id="@+id/imagePhoto"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true" />
+
+                    <Button
+                        android:id="@+id/btn_camera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="Ambil Photo" />
+                </RelativeLayout>
+            </LinearLayout>
+            
+              <LinearLayout
+                android:id="@+id/area_laporkan"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/area_photo"
+                android:layout_marginTop="15dp"
+                android:background="#fff" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="15dp" >
+
+                    <Button
+                        android:id="@+id/btn_laporkan"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="LAPORKAN..!!" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -18,11 +18,14 @@ public class SplashScreen extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.splash);
 
+		Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+		intent.putExtra("enabled", true);
+		sendBroadcast(intent);
+
 		// thread for displaying the SplashScreen
 		Thread splashTread = new Thread() {
 			@Override
 			public void run() {
-			
 
 				try {
 					int waited = 0;
@@ -35,8 +38,7 @@ public class SplashScreen extends Activity {
 				} catch (InterruptedException e) {
 					// do nothing
 				} finally {
-					Intent newIntent = new Intent(SplashScreen.this,
-							MainMenu.class);
+					Intent newIntent = new Intent(SplashScreen.this, MainMenu.class);
 					startActivityForResult(newIntent, 0);
 					finish();
 				}
