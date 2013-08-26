@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<project name="minang-resto.model_api" default="build" basedir=".">
+
+	<property file="development.properties" />
+	<property name="app.controllers.dir" value="controllers" />
+	<property name="app.models.dir" value="models" />
+	<property name="app.modules.dir" value="modules" />
+	
+	<target name="remote.install">
+		<copy todir="${ci.local.dir}application/${app.controllers.dir}" overwrite="true" >
+			<fileset dir="${app.controllers.dir}" />
+		</copy>
+		<copy todir="${ci.local.dir}application/${app.models.dir}" overwrite="true" >
+			<fileset dir="${app.models.dir}"/>
+		</copy>
+		<copy todir="${ci.local.dir}application/views/${app.modules.dir}" overwrite="true" >
+			<fileset dir="${app.modules.dir}"/>
+		</copy>
+	</target>
+	
+	<target name="remote.unistall">
+		<delete file="${ci.local.dir}application/${app.controllers.dir}/${ci.ctr.filename}.php"/>
+		<delete file="${ci.local.dir}application/${app.models.dir}/${ci.models.filename}.php"/>
+		<delete file="${ci.local.dir}application/views/${app.modules.dir}/${ci.modules.filename}.php"/>
+	</target>
+	
+	<target name="remote.zipping">
+		<mkdir dir="${ci.modules.name}"/>
+		<mkdir dir="${ci.modules.name}/controllers"/>
+		<mkdir dir="${ci.modules.name}/models"/>
+		<mkdir dir="${ci.modules.name}/views"/>
+		<copy todir="${ci.modules.name}/controllers" overwrite="true" >
+			<fileset dir="${app.controllers.dir}" />
+		</copy>
+		<copy todir="${ci.modules.name}/models" overwrite="true" >
+			<fileset dir="${app.models.dir}" />
+		</copy>
+		<mkdir dir="${ci.modules.name}/views/modules"/>
+		<copy todir="${ci.modules.name}/views/modules" overwrite="true" >
+			<fileset dir="${app.modules.dir}" />
+		</copy>
+		<zip destfile="${ci.modules.name}.zip" basedir="${ci.modules.name}"/>
+		<delete dir="${ci.modules.name}"/>
+	</target>
+
+	<target name="build">
+		<javac srcdir="." />
+	</target>
+</project>
