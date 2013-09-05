@@ -12,7 +12,10 @@
     <link rel="stylesheet" type="text/css" href="{SITE_TEMPLATE}{THEME}/stylesheets/theme.css">
     <link rel="stylesheet" href="{SITE_TEMPLATE}{THEME}/lib/font-awesome/css/font-awesome.css">
     <script src="{SITE_TEMPLATE}{THEME}/lib/jquery-1.7.2.min.js" type="text/javascript"></script>
-
+	<script type="text/javascript">
+	var base_url = $(location).attr('protocol') + "//" + $(location).attr('host') + "/damkar/";
+	</script>
+	{HEAD}
     <!-- Demo page code -->
     <style type="text/css">
         #line-chart {
@@ -48,18 +51,12 @@
                             <i class="icon-user"></i> Admin
                             <i class="icon-caret-down"></i>
                         </a>
-                        <!-- 
                         <ul class="dropdown-menu">
-                            <li><a tabindex="-1" href="#">My Account</a></li>
-                            <li class="divider"></li>
-                            <li><a tabindex="-1" class="visible-phone" href="#">Settings</a></li>
-                            <li class="divider visible-phone"></li>
-                            <li><a tabindex="-1" href="sign-in.html">Logout</a></li>
+                            <li><a tabindex="-1" href="{SITE_INDEX}mod_login/logout">Logout</a></li>
                         </ul>
-                         -->
                     </li>
                 </ul>
-                <a class="brand" href="index.html"><span class="first">DAMKAR</span> <span class="second">Admin</span></a>
+                <a class="brand" href="{SITE}"><span class="first">DAMKAR</span> <span class="second">Admin</span></a>
         </div>
     </div>
     <div class="sidebar-nav">
@@ -67,7 +64,7 @@
             <input type="text" placeholder="Search...">
         </form>
         
-        <a href="{SITE_INDEX}" class="nav-header" data-toggle="collapse"><i class="icon-dashboard"></i>Dashboard</a>
+        <a href="{SITE_INDEX}" class="nav-header"><i class="icon-dashboard"></i>Dashboard</a>
         <a href="#accounts-menu" class="nav-header" data-toggle="collapse"><i class="icon-briefcase"></i>Laporan Kebakaran<span class="label label-important">+3</span></a>
         <ul id="accounts-menu" class="nav nav-list collapse">
             <li ><a href="{SITE_INDEX}laporan">All</a></li>

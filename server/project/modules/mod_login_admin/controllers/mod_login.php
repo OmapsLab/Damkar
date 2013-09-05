@@ -8,17 +8,14 @@ class Mod_login extends CI_Controller {
 	}
 
 	public function index() {
-		$head[] = js(SITE.'bootstrap/js/bootstrap.min.js');
-		$head[] = style(SITE.'bootstrap/css/bootstrap.min.css');
-		$data['head'] = build_head($head);
 		$this->omap->type('modules');
 		$this->omap->title('Administration Login');
-		$this->omap->display('mod_login', $data);
+		$this->omap->display('mod_login');
 	}
 
 	public function logout(){
-		$this->session->unset_userdata('logged_resto_user_id');
-		$this->session->unset_userdata('logged_resto_user_name');	
+		$this->session->unset_userdata('logged_damkar_user_id');
+		$this->session->unset_userdata('logged_damkar_user_name');	
 		redirect('mod_login');
 	}
 
@@ -35,14 +32,14 @@ class Mod_login extends CI_Controller {
 			redirect('mod_login?n=err_null&message=Field Masih Kosong');
 			//echo '{"status":"err_null", "message":"Field Masih Kosong!!"}';
 		} else if ($user != $db_user) {
-			redirect('mod_login?n=err_user&message=Email Belum Terdaftar!!');
+			redirect('mod_login?n=err_user&message=User Belum Terdaftar!!');
 			//echo '{"status":"err_email", "message":"Email Belum Terdaftar!!"}';
 		} else if ($pass != $db_pass) {
 			redirect('mod_login?n=err_pass&message=Password Salah!');
 			//echo '{"status":"err_pass", "message":"Password Salah!!"}';
 		} else {
-			$this->session->set_userdata('logged_resto_user_id', $db_user_id);
-			$this->session->set_userdata('logged_resto_user_name', $db_user);
+			$this->session->set_userdata('logged_damkar_user_id', $db_user_id);
+			$this->session->set_userdata('logged_damkar_user_name', $db_user);
 			//echo '{"status":"ss", "message":"Suksess"}';
 			redirect('home');
 		}

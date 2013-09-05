@@ -6,8 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -23,18 +28,22 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.omap.damkar.config.Config;
 import com.omap.damkar.data.DataManager;
 import com.omap.damkar.gps.MyLocationListener;
+import com.omaps.lab.connection.HTTPCon;
 
 public class Kebakaran extends SherlockActivity {
 
-	Button getLocation, takePicture;
+	Button getLocation, takePicture, postReport;
 	TextView locationLabelLatitude, locationLabelLongitude;
 	String latitudeValue, longitudeValue;
 	double lat = 0.0;
 	double lon = 0.0;
+	String response;
 
 	private static final int ACTION_TAKE_PHOTO_S = 2;
 	private static final int ACTION_TAKE_PHOTO_B = 1;
@@ -52,7 +61,17 @@ public class Kebakaran extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.kebakaran);
+
+		HTTPCon.setOnHighestSDK();
+
+		mImageBitmap = null;
+		mImageView = (ImageView) findViewById(R.id.imagePhoto);
+		takePicture = (Button) findViewById(R.id.btn_camera);
+		postReport = (Button) findViewById(R.id.btn_laporkan);
+		locationLabelLatitude = (TextView) findViewById(R.id.label_location_latitude_value);
+		locationLabelLongitude = (TextView) findViewById(R.id.label_location_longitude_value);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 			mAlbumStorageDirFactory = new FroyoAlbumDirFactory();
@@ -60,28 +79,62 @@ public class Kebakaran extends SherlockActivity {
 			mAlbumStorageDirFactory = new BaseAlbumDirFactory();
 		}
 
-		locationLabelLatitude = (TextView) findViewById(R.id.label_location_latitude_value);
-		locationLabelLongitude = (TextView) findViewById(R.id.label_location_longitude_value);
-
 		locationLabelLatitude.setText(": " + DataManager.getData().getLatitude());
 		locationLabelLongitude.setText(": " + DataManager.getData().getLongitude());
-
-		mImageBitmap = null;
-		mImageView = (ImageView) findViewById(R.id.imagePhoto);
-		takePicture = (Button) findViewById(R.id.btn_camera);
-		setBtnListenerOrDisable(takePicture, mTakePicSOnClickListener, MediaStore.ACTION_IMAGE_CAPTURE);
+		setBtnListenerOrDisable(takePicture, mTakePicOnClickListener, MediaStore.ACTION_IMAGE_CAPTURE);
 
 		getLocation = (Button) findViewById(R.id.btn_get_location);
 		if (DataManager.getData().getLatitude() != 0 || DataManager.getData().getLongitude() != 0) {
 			getLocation.setText("Update Lokasi");
 		}
-		getLocation.setOnClickListener(new OnClickListener() {
 
+		getLocation.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				locationLabelLatitude.setText(": " + MyLocationListener.getLat());
 				locationLabelLongitude.setText(": " + MyLocationListener.getLon());
 				getLocation.setText("Update Lokasi");
+			}
+		});
+
+		postReport.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				final ProgressDialog dialog = ProgressDialog.show(Kebakaran.this, "Loading", "Mengirim Data..", true);
+				// thread for displaying the SplashScreen
+				Thread splashTread = new Thread() {
+					@Override
+					public void run() {
+						System.out.println("Post Laporkan");
+						
+						Bitmap imgBitmap = (DataManager.getData().getImgBitmap()) != null ? DataManager.getData().getImgBitmap() : mImageBitmap;
+						
+						
+						System.out.println("IMG " + imgBitmap);
+						response = HTTPCon.UPLOADIMG(Config.SERVER_API + "create_pengaduan/" + Config.DAMKAR_MY_PHONE + "/" + DataManager.getData().getLatitude() + "/" + DataManager.getData().getLongitude(), imgBitmap);
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								dialog.dismiss();
+								Toast.makeText(getApplicationContext(), "Laporan Kebakaran berhasil di posting", Toast.LENGTH_LONG).show();
+								JSONObject obj;
+								try {
+									obj = new JSONObject(response);
+									if (obj.getString("status").equals("AVAILABLE")) {
+										Intent intent = new Intent(getApplicationContext(), TelfonDamkar.class);
+										startActivity(intent);
+										finish();
+									}
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+
+							}
+						});
+					}
+				};
+				splashTread.start();
 			}
 		});
 
@@ -132,7 +185,8 @@ public class Kebakaran extends SherlockActivity {
 		return f;
 	}
 
-	private void setPic() {
+	private void setPic(int scale) {
+		System.out.println("SET PIC");
 
 		/* There isn't enough memory to open up more than a couple camera photos */
 		/* So pre-scale the target bitmap into which the file is decoded */
@@ -147,9 +201,11 @@ public class Kebakaran extends SherlockActivity {
 		BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
 		int photoW = bmOptions.outWidth;
 		int photoH = bmOptions.outHeight;
+		
+		System.out.println("PHOTO WIDTH - HEIGHT = " + photoW +" - "+ photoH);
 
 		/* Figure out which way needs to be reduced less */
-		int scaleFactor = 1;
+		int scaleFactor = scale;
 		if ((targetW > 0) || (targetH > 0)) {
 			scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 		}
@@ -161,6 +217,7 @@ public class Kebakaran extends SherlockActivity {
 
 		/* Decode the JPEG file into a Bitmap */
 		Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+		DataManager.getData().setImgBitmap(bitmap);
 
 		/* Associate the Bitmap to the ImageView */
 		mImageView.setImageBitmap(bitmap);
@@ -169,6 +226,7 @@ public class Kebakaran extends SherlockActivity {
 	}
 
 	private void galleryAddPic() {
+		System.out.println("GALERY PIC");
 		Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
 		File f = new File(mCurrentPhotoPath);
 		Uri contentUri = Uri.fromFile(f);
@@ -210,19 +268,14 @@ public class Kebakaran extends SherlockActivity {
 
 	}
 
-	private void handleBigCameraPhoto() {
+	private void handleBigCameraPhoto(int scale) {
 
 		if (mCurrentPhotoPath != null) {
-			setPic();
+			setPic(scale);
 			galleryAddPic();
 			mCurrentPhotoPath = null;
 		}
 
-	}
-
-	private void handleCameraVideo(Intent intent) {
-		mImageBitmap = null;
-		mImageView.setVisibility(View.INVISIBLE);
 	}
 
 	Button.OnClickListener mTakePicOnClickListener = new Button.OnClickListener() {
@@ -244,7 +297,7 @@ public class Kebakaran extends SherlockActivity {
 		switch (requestCode) {
 		case ACTION_TAKE_PHOTO_B: {
 			if (resultCode == RESULT_OK) {
-				handleBigCameraPhoto();
+				handleBigCameraPhoto(6);
 			}
 			break;
 		} // ACTION_TAKE_PHOTO_B
@@ -255,7 +308,6 @@ public class Kebakaran extends SherlockActivity {
 			}
 			break;
 		}
-
 		}
 	}
 
@@ -304,5 +356,12 @@ public class Kebakaran extends SherlockActivity {
 			btn.setText(getText(R.string.cannot).toString() + " " + btn.getText());
 			btn.setClickable(false);
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+		startActivity(intent);
+		finish();
 	}
 }

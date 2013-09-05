@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="minang-resto.model_api" default="build" basedir=".">
+<project name="damkar.model_api" default="build" basedir=".">
 
 	<property file="development.properties" />
 	<property name="app.controllers.dir" value="controllers" />

@@ -6,14 +6,14 @@
  ***********************************************************************/
 
 // Fungsi untuk menuliskan file
-function write_to_file($file_txt,$data){
+function write_to_file($file_txt,$data, $type = "w"){
 	$data_txt = $file_txt;
 	if(!file_exists($data_txt)){
-		$open = fopen($data_txt, "w");
+		$open = fopen($data_txt, $type);
 		fputs($open,' ');
 		fclose($open);
 	}else{
-		$open = fopen($data_txt, "w");
+		$open = fopen($data_txt, $type);
 		fwrite($open,$data);
 		fclose($open);
 	}

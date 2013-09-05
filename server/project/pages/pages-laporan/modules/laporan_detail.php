@@ -12,7 +12,7 @@
            		
            </div>
            <div class="span6">
-           		
+           		s
            </div>
         </div>
     </div>
