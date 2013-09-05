@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alwaysDrawnWithCache="false"
+    android:fitsSystemWindows="true" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="40dp" >
+
+                <LinearLayout
+                    android:id="@+id/menu_3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="40dp"
+                    android:background="@drawable/bg_with_shadow_1" >
+
+                    <Button
+                        android:id="@+id/telfon_damkar"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" 
+                        android:text="CALL"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/menu_4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/menu_3" >
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</RelativeLayout>
