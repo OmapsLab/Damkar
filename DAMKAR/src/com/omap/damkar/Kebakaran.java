@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -35,6 +34,7 @@ import com.omap.damkar.config.Config;
 import com.omap.damkar.data.DataManager;
 import com.omap.damkar.gps.MyLocationListener;
 import com.omaps.lab.connection.HTTPCon;
+import com.omaps.lab.img.ImageManager;
 
 public class Kebakaran extends SherlockActivity {
 
@@ -108,11 +108,13 @@ public class Kebakaran extends SherlockActivity {
 					public void run() {
 						System.out.println("Post Laporkan");
 						
-						Bitmap imgBitmap = (DataManager.getData().getImgBitmap()) != null ? DataManager.getData().getImgBitmap() : mImageBitmap;
+						Bitmap img_not_available = ImageManager.getBitmapFromDrawableId(getApplicationContext(), R.drawable.image_not_available);
+						Bitmap imgBitmap = (DataManager.getData().getImgBitmap()) != null ? DataManager.getData().getImgBitmap() : img_not_available;
 						
 						
 						System.out.println("IMG " + imgBitmap);
 						response = HTTPCon.UPLOADIMG(Config.SERVER_API + "create_pengaduan/" + Config.DAMKAR_MY_PHONE + "/" + DataManager.getData().getLatitude() + "/" + DataManager.getData().getLongitude(), imgBitmap);
+						
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
