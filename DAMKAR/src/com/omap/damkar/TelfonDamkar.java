@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.omap.damkar.config.Config;
@@ -37,10 +38,13 @@ public class TelfonDamkar extends SherlockActivity {
 
 			@Override
 			public void onClick(View arg0) {
-
-				Intent callIntent = new Intent(Intent.ACTION_CALL);
-				callIntent.setData(Uri.parse("tel:" + Config.DAMKAR_PHONE_NUMBER));
-				startActivity(callIntent);
+				if (DataManager.getData().getPhoneNumber() != null) {
+					Intent callIntent = new Intent(Intent.ACTION_CALL);
+					callIntent.setData(Uri.parse("tel:" + Config.DAMKAR_PHONE_NUMBER));
+					startActivity(callIntent);
+				} else {
+					Toast.makeText(getApplicationContext(), "Phone Number belum di konfigurasi..", Toast.LENGTH_LONG).show();
+				}
 			}
 
 		});
@@ -64,8 +68,8 @@ public class TelfonDamkar extends SherlockActivity {
 				Log.i(LOG_TAG, "OFFHOOK");
 				int id_pengaduan = DataManager.getData().getIdPenngaduan();
 				// Update Status
-				HTTPCon.GET(Config.SERVER_API + "update_status_pengaduan/"+ String.valueOf(id_pengaduan)  +"/ON-CALL");
-				
+				HTTPCon.GET(Config.SERVER_API + "update_status_pengaduan/" + String.valueOf(id_pengaduan) + "/ON-CALL");
+
 				isPhoneCalling = true;
 			} else if (TelephonyManager.CALL_STATE_IDLE == state) {
 				// run when class initial and phone call ended,
@@ -73,7 +77,7 @@ public class TelfonDamkar extends SherlockActivity {
 				Log.i(LOG_TAG, "IDLE");
 
 				if (isPhoneCalling) {
-						
+
 					Log.i(LOG_TAG, "restart app");
 
 					// restart app

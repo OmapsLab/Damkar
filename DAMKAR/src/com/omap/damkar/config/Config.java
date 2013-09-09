@@ -15,6 +15,6 @@ public class Config extends SherlockActivity {
 	public static String LOGGING = "OMAPS_DAMKAR";
 
 	// Databases Config
-	public static String DB_NAME = "";
-	public static String DB_TABLE_BOOKING = "";
+	public static String DB_NAME = "db_damkar";
+	public static String DB_TABLE_CONFIG = "config";
 }

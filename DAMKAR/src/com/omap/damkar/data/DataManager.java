@@ -10,6 +10,7 @@ public class DataManager {
 	private Bitmap imgBitmap;
 	private int idPenngaduan;
 	private String photoPath;
+	private String phoneNumber;
 
 	private DataManager() {
 	}
@@ -56,5 +57,13 @@ public class DataManager {
 	
 	public String getPhotoPath() {
 		return photoPath;
+	}
+	
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 }

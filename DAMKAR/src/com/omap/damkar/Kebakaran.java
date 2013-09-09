@@ -61,6 +61,7 @@ public class Kebakaran extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle("Pengaduan Kebakaran");
 		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.kebakaran);
 
@@ -101,49 +102,58 @@ public class Kebakaran extends SherlockActivity {
 			@Override
 			public void onClick(View v) {
 
-				final ProgressDialog dialog = ProgressDialog.show(Kebakaran.this, "Loading", "Mengirim Data..", true);
-				// thread for displaying the SplashScreen
-				Thread splashTread = new Thread() {
-					@Override
-					public void run() {
-						System.out.println("Post Laporkan");
+				if (DataManager.getData().getPhoneNumber() != null) {
+					final ProgressDialog dialog = ProgressDialog.show(Kebakaran.this, "Loading", "Mengirim Data..", true);
+					// thread for displaying the SplashScreen
+					Thread splashTread = new Thread() {
+						@Override
+						public void run() {
+							System.out.println("Post Laporkan");
 
-						Bitmap img_not_available = ImageManager.getBitmapFromDrawableId(getApplicationContext(), R.drawable.image_not_available);
-						Bitmap imgBitmap = (DataManager.getData().getImgBitmap()) != null ? DataManager.getData().getImgBitmap() : img_not_available;
+							Bitmap img_not_available = ImageManager.getBitmapFromDrawableId(getApplicationContext(), R.drawable.image_not_available);
+							Bitmap imgBitmap = (DataManager.getData().getImgBitmap()) != null ? DataManager.getData().getImgBitmap() : img_not_available;
 
-						System.out.println("IMG " + imgBitmap);
-						response = HTTPCon.UPLOADIMG(Config.SERVER_API + "create_pengaduan/" + Config.DAMKAR_MY_PHONE + "/" + DataManager.getData().getLatitude() + "/" + DataManager.getData().getLongitude(), imgBitmap);
+							System.out.println("IMG " + imgBitmap);
+							response = HTTPCon.UPLOADIMG(Config.SERVER_API + "create_pengaduan/" + DataManager.getData().getPhoneNumber() + "/" + DataManager.getData().getLatitude() + "/" + DataManager.getData().getLongitude(), imgBitmap);
 
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								dialog.dismiss();
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									dialog.dismiss();
 
-								if (response.equals("ERROR_URL") || response.equals("TIMEOUT") || response.equals("ERROR_CONN")) {
-									Toast.makeText(getApplicationContext(), "Cek Internet Connection..!!!", Toast.LENGTH_LONG).show();
-								} else {
-									JSONObject obj;
-									try {
-										obj = new JSONObject(response);
-										if (obj.getString("status").equals("AVAILABLE")) {
-											Toast.makeText(getApplicationContext(), "Laporan Kebakaran berhasil di posting", Toast.LENGTH_LONG).show();
-											DataManager.getData().setIdPenngaduan(obj.getInt("id_pengaduan"));
-											Intent intent = new Intent(getApplicationContext(), TelfonDamkar.class);
-											startActivity(intent);
-											finish();
-										} else {
-											Toast.makeText(getApplicationContext(), "Laporan Kebakaran gagal di posting", Toast.LENGTH_LONG).show();
+									if (response.equals("ERROR_URL") || response.equals("TIMEOUT") || response.equals("ERROR_CONN")) {
+										Toast.makeText(getApplicationContext(), "Cek Internet Connection..!!!", Toast.LENGTH_LONG).show();
+									} else {
+										JSONObject obj;
+										try {
+											obj = new JSONObject(response);
+											if (obj.getString("status").equals("OUT-OF-COVERAGE")) {
+												Toast.makeText(getApplicationContext(), "Laporan Kebakaran berhasil di posting dan diluar area", Toast.LENGTH_LONG).show();
+												DataManager.getData().setIdPenngaduan(obj.getInt("id_pengaduan"));
+												Intent intent = new Intent(getApplicationContext(), OutOfArea.class);
+												startActivity(intent);
+												finish();
+											} else if (obj.getString("status").equals("AVAILABLE")) {
+												Toast.makeText(getApplicationContext(), "Laporan Kebakaran berhasil di posting", Toast.LENGTH_LONG).show();
+												DataManager.getData().setIdPenngaduan(obj.getInt("id_pengaduan"));
+												Intent intent = new Intent(getApplicationContext(), TelfonDamkar.class);
+												startActivity(intent);
+												finish();
+											} else {
+												Toast.makeText(getApplicationContext(), "Laporan Kebakaran gagal di posting", Toast.LENGTH_LONG).show();
+											}
+										} catch (JSONException e) {
+											e.printStackTrace();
 										}
-									} catch (JSONException e) {
-										e.printStackTrace();
 									}
-
 								}
-							}
-						});
-					}
-				};
-				splashTread.start();
+							});
+						}
+					};
+					splashTread.start();
+				} else {
+					Toast.makeText(getApplicationContext(), "Phone Number belum di konfigurasi..", Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 

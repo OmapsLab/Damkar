@@ -47,6 +47,10 @@
         </activity>
         <activity android:name="com.omap.damkar.TelfonDamkar" >
         </activity>
+        <activity android:name="com.omap.damkar.Setting" >
+        </activity>
+        <activity android:name="com.omap.damkar.OutOfArea" >
+        </activity>
     </application>
 
 </manifest>

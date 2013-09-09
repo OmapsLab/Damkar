@@ -146,6 +146,18 @@ class Db_pengaduan extends CI_Model {
 							     ORDER BY p.tgl_pengaduan DESC");	
 	}
 
+	public function view_pengaduan_by_id_and_distance($id_pengaduan, $lat, $long, $dist, $val = "<") {
+		return $this->db->query("SELECT *,
+										DATE_FORMAT(p.tgl_pengaduan, '%Y-%m-%d') as date_pengaduan,
+										ROUND(( 6371 * acos( cos( radians(".$lat.") ) * cos( radians( pt.latitude ) ) * cos( radians( pt.longitude ) - radians(".$long.") ) + sin( radians(".$lat.") ) * sin( radians( pt.latitude ) ) ) ), 2) AS distance
+							     FROM pengaduan p 
+							     LEFT JOIN masyarakat m ON m.id_masyarakat = p.id_masyarakat_f
+							     LEFT JOIN peta pt ON pt.id_peta = p.id_peta_f
+							     WHERE p.id_pengaduan = '".$id_pengaduan."' 
+							     HAVING distance ".$val.$dist."
+							     ORDER BY p.tgl_pengaduan DESC");	
+	}
+
 
 	public function update_status_pengaduan($id, $status) {
 		$this->db->query("UPDATE pengaduan SET status = '".$status."'

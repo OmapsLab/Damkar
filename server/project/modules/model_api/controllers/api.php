@@ -27,7 +27,16 @@ class Api extends CI_Controller {
 		}
 
 		$id_pengaduan = $this->db_pengaduan->add_pengaduan($id_masyarakat, $id_peta, $img_name);
-		echo '{"n":"ss_add","status":"AVAILABLE", "id_pengaduan": '.$id_pengaduan.'}';
+		$distance = $this->db_pengaduan->view_pengaduan_by_id_and_distance($id_pengaduan,'-6.917467','107.633333','20','>')->num_rows();
+		$q_distance = $this->db_pengaduan->view_pengaduan_by_id_and_distance($id_pengaduan,'-6.917467','107.633333','20','>')->result();
+		$get_distance = ($distance != 0) ? $q_distance[0]->distance : 0;
+		if ($get_distance == 0) {
+			echo '{"n":"ss_add","status":"AVAILABLE", "id_pengaduan": '.$id_pengaduan.', "distance" : '.$get_distance.'}';	
+		} else {
+			$this->db_pengaduan->update_status_pengaduan($id_pengaduan, 'OUT-OF-COVERAGE');
+			echo '{"n":"ss_add","status":"OUT-OF-COVERAGE", "id_pengaduan": '.$id_pengaduan.', "distance" : '.$get_distance.'}';
+		}
+		
 	}
 
 	public function update_status_pengaduan($id, $status) {

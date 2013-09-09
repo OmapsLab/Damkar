@@ -22,7 +22,7 @@
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="172dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="40dp" >
 
@@ -31,21 +31,19 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="40dp"
-                    android:background="@drawable/bg_with_shadow_1" >
+                    android:background="#fff"
+                    android:padding="20dp" >
 
-                    <Button
-                        android:id="@+id/telfon_damkar"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" 
-                        android:text="CALL"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.36"
+                        android:gravity="center_horizontal"
+                        android:text="OUT OF COVERAGE"
+                        android:textSize="20dip"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/menu_4"
-                    android:layout_width="fill_parent"
-                    android:layout_height="20dp"
-                    android:layout_below="@+id/menu_3" >
-                </LinearLayout>
             </RelativeLayout>
         </ScrollView>
     </LinearLayout>
