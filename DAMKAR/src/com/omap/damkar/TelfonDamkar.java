@@ -13,6 +13,8 @@ import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.omap.damkar.config.Config;
+import com.omap.damkar.data.DataManager;
+import com.omaps.lab.connection.HTTPCon;
 
 public class TelfonDamkar extends SherlockActivity {
 
@@ -49,7 +51,7 @@ public class TelfonDamkar extends SherlockActivity {
 	private class PhoneCallListener extends PhoneStateListener {
 
 		private boolean isPhoneCalling = false;
-		String LOG_TAG = "LOGGING 123";
+		String LOG_TAG = "LOGGING";
 
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
@@ -60,7 +62,10 @@ public class TelfonDamkar extends SherlockActivity {
 			} else if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
 				// active
 				Log.i(LOG_TAG, "OFFHOOK");
-
+				int id_pengaduan = DataManager.getData().getIdPenngaduan();
+				// Update Status
+				HTTPCon.GET(Config.SERVER_API + "update_status_pengaduan/"+ String.valueOf(id_pengaduan)  +"/ON-CALL");
+				
 				isPhoneCalling = true;
 			} else if (TelephonyManager.CALL_STATE_IDLE == state) {
 				// run when class initial and phone call ended,
@@ -68,7 +73,7 @@ public class TelfonDamkar extends SherlockActivity {
 				Log.i(LOG_TAG, "IDLE");
 
 				if (isPhoneCalling) {
-
+						
 					Log.i(LOG_TAG, "restart app");
 
 					// restart app

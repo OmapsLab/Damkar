@@ -43,7 +43,7 @@
           },
           map:{
             options:{
-              zoom: 5
+              zoom: 17
             }
           }
         });

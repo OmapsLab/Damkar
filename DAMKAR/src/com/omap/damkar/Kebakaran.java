@@ -61,7 +61,7 @@ public class Kebakaran extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.kebakaran);
 
 		HTTPCon.setOnHighestSDK();
@@ -107,31 +107,38 @@ public class Kebakaran extends SherlockActivity {
 					@Override
 					public void run() {
 						System.out.println("Post Laporkan");
-						
+
 						Bitmap img_not_available = ImageManager.getBitmapFromDrawableId(getApplicationContext(), R.drawable.image_not_available);
 						Bitmap imgBitmap = (DataManager.getData().getImgBitmap()) != null ? DataManager.getData().getImgBitmap() : img_not_available;
-						
-						
+
 						System.out.println("IMG " + imgBitmap);
 						response = HTTPCon.UPLOADIMG(Config.SERVER_API + "create_pengaduan/" + Config.DAMKAR_MY_PHONE + "/" + DataManager.getData().getLatitude() + "/" + DataManager.getData().getLongitude(), imgBitmap);
-						
+
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								dialog.dismiss();
-								Toast.makeText(getApplicationContext(), "Laporan Kebakaran berhasil di posting", Toast.LENGTH_LONG).show();
-								JSONObject obj;
-								try {
-									obj = new JSONObject(response);
-									if (obj.getString("status").equals("AVAILABLE")) {
-										Intent intent = new Intent(getApplicationContext(), TelfonDamkar.class);
-										startActivity(intent);
-										finish();
-									}
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
 
+								if (response.equals("ERROR_URL") || response.equals("TIMEOUT") || response.equals("ERROR_CONN")) {
+									Toast.makeText(getApplicationContext(), "Cek Internet Connection..!!!", Toast.LENGTH_LONG).show();
+								} else {
+									JSONObject obj;
+									try {
+										obj = new JSONObject(response);
+										if (obj.getString("status").equals("AVAILABLE")) {
+											Toast.makeText(getApplicationContext(), "Laporan Kebakaran berhasil di posting", Toast.LENGTH_LONG).show();
+											DataManager.getData().setIdPenngaduan(obj.getInt("id_pengaduan"));
+											Intent intent = new Intent(getApplicationContext(), TelfonDamkar.class);
+											startActivity(intent);
+											finish();
+										} else {
+											Toast.makeText(getApplicationContext(), "Laporan Kebakaran gagal di posting", Toast.LENGTH_LONG).show();
+										}
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}
+
+								}
 							}
 						});
 					}
@@ -180,15 +187,16 @@ public class Kebakaran extends SherlockActivity {
 	}
 
 	private File setUpPhotoFile() throws IOException {
-
 		File f = createImageFile();
 		mCurrentPhotoPath = f.getAbsolutePath();
-
+		DataManager.getData().setPhotoPath(f.getAbsolutePath());
+		System.out.println("GET FILE => " + f.getAbsolutePath());
 		return f;
 	}
 
 	private void setPic(int scale) {
 		System.out.println("SET PIC");
+		mCurrentPhotoPath = DataManager.getData().getPhotoPath();
 
 		/* There isn't enough memory to open up more than a couple camera photos */
 		/* So pre-scale the target bitmap into which the file is decoded */
@@ -203,8 +211,8 @@ public class Kebakaran extends SherlockActivity {
 		BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
 		int photoW = bmOptions.outWidth;
 		int photoH = bmOptions.outHeight;
-		
-		System.out.println("PHOTO WIDTH - HEIGHT = " + photoW +" - "+ photoH);
+
+		System.out.println("PHOTO WIDTH - HEIGHT = " + photoW + " - " + photoH);
 
 		/* Figure out which way needs to be reduced less */
 		int scaleFactor = scale;
@@ -229,6 +237,8 @@ public class Kebakaran extends SherlockActivity {
 
 	private void galleryAddPic() {
 		System.out.println("GALERY PIC");
+		mCurrentPhotoPath = DataManager.getData().getPhotoPath();
+
 		Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
 		File f = new File(mCurrentPhotoPath);
 		Uri contentUri = Uri.fromFile(f);
@@ -271,11 +281,14 @@ public class Kebakaran extends SherlockActivity {
 	}
 
 	private void handleBigCameraPhoto(int scale) {
+		mCurrentPhotoPath = DataManager.getData().getPhotoPath();
 
 		if (mCurrentPhotoPath != null) {
 			setPic(scale);
 			galleryAddPic();
 			mCurrentPhotoPath = null;
+		} else {
+			System.out.println("ERROR HANDLE CAMERA " + mCurrentPhotoPath);
 		}
 
 	}

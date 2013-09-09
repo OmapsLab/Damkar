@@ -16,7 +16,7 @@
       
         $("#map").gmap3({
           marker:{
-            latLng: [<?=@$_GET['lat']?>,<?=@$_GET['long']?>],
+            latLng: [<?=$q_pengaduan[0]->latitude?>,<?=$q_pengaduan[0]->longitude?>],
             options:{
               draggable:true
             },
@@ -48,7 +48,7 @@
           },
           map:{
             options:{
-              zoom: 5
+              zoom: 17
             }
           }
         });

@@ -9,7 +9,66 @@ class Home extends CI_Controller {
 
 	public function index() {
 		if ($this->session->userdata('logged_damkar_user_id')) {
-			$data['q_pengaduan'] = $this->db_pengaduan->view_pengaduan()->result();
+			$data['q_pengaduan'] = $this->db_pengaduan->view_pengaduan_by_distance_and_now('-6.917467','107.633333')->result();
+
+			$this->omap->type('pages');
+			$this->omap->title('DASBOR');
+			$this->omap->label('dasbor');
+			$this->omap->display('home_now', $data);
+		} else {
+			redirect('mod_login');
+		}
+	}
+
+	public function now() {
+		if ($this->session->userdata('logged_damkar_user_id')) {
+			$data['q_pengaduan'] = $this->db_pengaduan->view_pengaduan_by_distance_and_now('-6.917467','107.633333')->result();
+
+			$this->omap->type('pages');
+			$this->omap->title('DASBOR');
+			$this->omap->label('dasbor');
+			$this->omap->display('home_now', $data);
+		} else {
+			redirect('mod_login');
+		}
+	}
+
+	public function lasted() {
+		if ($this->session->userdata('logged_damkar_user_id')) {
+			$data['q_pengaduan'] = $this->db_pengaduan->view_pengaduan_by_distance_and_status('-6.917467','107.633333', 'AVAILABLE')->result();
+
+			$this->omap->type('pages');
+			$this->omap->title('DASBOR');
+			$this->omap->label('dasbor');
+			$this->omap->display('home_lasted', $data);
+		} else {
+			redirect('mod_login');
+		}
+	}
+
+	public function search() {
+		if ($this->session->userdata('logged_damkar_user_id')) {
+				
+			$key = $this->input->get('search');
+			$data['q_pengaduan'] = $this->db_pengaduan->view_pengaduan_by_search($key,'-6.917467','107.633333')->result();
+
+			$this->omap->type('pages');
+			$this->omap->title('DASBOR');
+			$this->omap->label('dasbor');
+			$this->omap->display('home_lasted', $data);
+		} else {
+			redirect('mod_login');
+		}
+	}
+
+	public function nearby() {
+		if ($this->session->userdata('logged_damkar_user_id')) {
+			$data['q_pengaduan_5'] = $this->db_pengaduan->view_pengaduan_by_nearby('-6.917467','107.633333','5')->result();
+			$data['q_pengaduan_10'] = $this->db_pengaduan->view_pengaduan_by_nearby_and_between('-6.917467','107.633333','5-10')->result();
+			$data['q_pengaduan_15'] = $this->db_pengaduan->view_pengaduan_by_nearby_and_between('-6.917467','107.633333','10-15')->result();
+			$data['q_pengaduan_20'] = $this->db_pengaduan->view_pengaduan_by_nearby_and_between('-6.917467','107.633333','15-20')->result();
+			$data['q_pengaduan__'] = $this->db_pengaduan->view_pengaduan_by_nearby('-6.917467','107.633333','20', '>')->result();
+
 			$this->omap->type('pages');
 			$this->omap->title('DASBOR');
 			$this->omap->label('dasbor');
@@ -18,6 +77,7 @@ class Home extends CI_Controller {
 			redirect('mod_login');
 		}
 	}
+
 
 	public function update_masyarakat() {
 		if ($this->session->userdata('logged_damkar_user_id')) {
@@ -30,6 +90,23 @@ class Home extends CI_Controller {
 			} else {
 				$this->db_pengaduan->update_masyarakat($id, $nama, $alamat);
 				echo '{"n":"ss_udt"}';
+			}
+		} else {
+			redirect('mod_login');
+		}
+	}
+
+	public function update_status() {
+		if ($this->session->userdata('logged_damkar_user_id')) {
+			$status = $this->input->post('status');
+			$id = $this->input->post('id_pengaduan');
+			$page_from = $this->input->post('page-from');
+
+			if ($status == "") {
+				echo '{"n":"err_null"}';
+			} else {
+				$this->db_pengaduan->update_status_pengaduan($id, $status);
+				echo '{"n":"ss_udt", "page_from":"'.$page_from.'"}';
 			}
 		} else {
 			redirect('mod_login');
@@ -72,7 +149,7 @@ class Home extends CI_Controller {
 		$head[] = js('http://maps.googleapis.com/maps/api/js?sensor=false');
 		$head[] = js(JS.'gmap3.js');
 		$this->omap->head(build_head($head));
-		
+
 		if ($this->session->userdata('logged_damkar_user_id')) {
 			$data['q_pengaduan'] = $this->db_pengaduan->view_pengaduan_by_id($id_pengaduan)->result();
 			$this->omap->type('pages');

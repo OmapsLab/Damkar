@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{SITE_TEMPLATE}{THEME}/lib/font-awesome/css/font-awesome.css">
     <script src="{SITE_TEMPLATE}{THEME}/lib/jquery-1.7.2.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
-	var base_url = $(location).attr('protocol') + "//" + $(location).attr('host') + "/damkar/";
+	var base_url = $(location).attr('protocol') + "//" + $(location).attr('host') + "/";
 	</script>
 	{HEAD}
     <!-- Demo page code -->
@@ -67,10 +67,13 @@
         <a href="{SITE_INDEX}" class="nav-header"><i class="icon-dashboard"></i>Dashboard</a>
         <a href="#accounts-menu" class="nav-header" data-toggle="collapse"><i class="icon-briefcase"></i>Laporan Kebakaran<span class="label label-important">+3</span></a>
         <ul id="accounts-menu" class="nav nav-list collapse">
-            <li ><a href="{SITE_INDEX}laporan">All</a></li>
-            <li ><a href="{SITE_INDEX}laporan">New</a></li>
+            <li ><a href="{SITE_INDEX}laporan">AVAILABLE</a></li>
+            <li ><a href="{SITE_INDEX}laporan">ON-CALL</a></li>
+			<li ><a href="{SITE_INDEX}laporan">OK</a></li>
+			<li ><a href="{SITE_INDEX}laporan">FAIL</a></li>
+			<li ><a href="{SITE_INDEX}laporan">OUT-OF-AREA</a></li>
         </ul>        
-        <a href="#legal-menu" class="nav-header" data-toggle="collapse"><i class="icon-legal"></i>Maps</a>
+        <a href="{SITE_INDEX}maps" class="nav-header"><i class="icon-legal"></i>Maps</a>
         <a href="help.html" class="nav-header" ><i class="icon-question-sign"></i>Help</a>
         <a href="faq.html" class="nav-header" ><i class="icon-comment"></i>Faq</a>
     </div>

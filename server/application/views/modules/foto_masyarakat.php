@@ -2,7 +2,7 @@
       .foto{
         margin: 20px auto;
         border: 1px dashed #C0C0C0;
-        width: 300px;
+        width: 600px;
       }
 </style>
 <div align="center">

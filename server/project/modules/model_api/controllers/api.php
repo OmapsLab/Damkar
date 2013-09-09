@@ -26,7 +26,12 @@ class Api extends CI_Controller {
 			$img_name = "";
 		}
 
-		$this->db_pengaduan->add_pengaduan($id_masyarakat, $id_peta, $img_name);
-		echo '{"n":"ss_add","status":"AVAILABLE"}';
+		$id_pengaduan = $this->db_pengaduan->add_pengaduan($id_masyarakat, $id_peta, $img_name);
+		echo '{"n":"ss_add","status":"AVAILABLE", "id_pengaduan": '.$id_pengaduan.'}';
+	}
+
+	public function update_status_pengaduan($id, $status) {
+		$this->db_pengaduan->update_status_pengaduan($id, $status);
+		echo '{"n":"ss_add","status":"ON-CALL"}';
 	}
 }
