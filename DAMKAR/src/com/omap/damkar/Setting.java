@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.omap.damkar.data.DataManager;
 import com.omap.damkar.model.ConfigModel;
 
 public class Setting extends SherlockActivity {
@@ -55,6 +56,7 @@ public class Setting extends SherlockActivity {
 			@Override
 			public void onClick(View arg0) {
 				String getPhoneNumber = "hp_" + phone_number.getText().toString();
+				DataManager.getData().setPhoneNumber(getPhoneNumber);
 
 				if (getPhoneNumber.equals("")) {
 					Toast.makeText(getApplicationContext(), "Field Masih kosong..!!", Toast.LENGTH_LONG).show();

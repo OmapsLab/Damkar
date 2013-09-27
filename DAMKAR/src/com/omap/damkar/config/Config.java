@@ -4,8 +4,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 
 public class Config extends SherlockActivity {
 	// Server
-	public static String SERVER_API = "http://damkar.tafarlysaja.com/index.php/api/";
-	public static String SERVER = "http://damkar.tafarlysaja.com/index.php/";
+	public static String SERVER_API = "http://tugasakhir.tafarlysaja.com/index.php/c_komunikasi/";
+	public static String SERVER = "http://tugasakhir.tafarlysaja.com/index.php/";
 
 	// Damkar
 	public static String DAMKAR_PHONE_NUMBER = "085793242909";
